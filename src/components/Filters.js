@@ -1,7 +1,14 @@
 import { useState } from "react";
+import Select from 'react-select';
 
 const Filters = props => {
   const [selectedTags, setSelectedTags] = useState([]);
+
+  const nameSelectionHandler = selection => {
+    const action = selection === null ? "remove" : "add";
+    const label = selection === null ? "" : selection.label;
+    props.filterSensors("name", label, action);
+  };
 
   const tagClickHandler = tag => {
     // Update the list of selected tags
@@ -24,6 +31,15 @@ const Filters = props => {
   return (
     <div className="filters-container">
       <h2>Filter</h2>
+      <div className="filters-section">
+        <div className="filters-section-title">Name</div>
+        <div className="filters-section-instructions">Start typing the name of the filter.</div>
+        <Select
+          options={props.names}
+          isClearable
+          onChange={nameSelectionHandler}
+        />
+      </div>
       <div className="filters-section">
         <div className="filters-section-title">Tags</div>
         <div className="filters-section-instructions">Select all that apply.</div>

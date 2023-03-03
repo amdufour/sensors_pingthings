@@ -11,6 +11,7 @@ const Sensors = () => {
   const [isSearch, setIsSearch] = useState(false);
   const [searchParameters, setSearchParameters] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
+  const [availableNames, setAvailableNames] = useState([]);
 
   useEffect(() => {
     // Fetch the sensors data
@@ -21,6 +22,7 @@ const Sensors = () => {
       const responseData = await response.json();
 
       const loadedSensors = [];
+      const names = [];
       const tags = [];
 
       // Extract sensors metadata
@@ -31,6 +33,13 @@ const Sensors = () => {
           latitude: responseData[key].loc_lat,
           longitude: responseData[key].loc_long,
           tags: responseData[key].tags,
+        });
+
+        // Extract available names
+        // We consider that names are unique for simplicity
+        names.push({
+          value: responseData[key].name.toLowerCase(),
+          label: responseData[key].name
         });
 
         // Extract available tags
@@ -44,6 +53,7 @@ const Sensors = () => {
       setAllSensors(loadedSensors);
       setSensorsToDisplay(loadedSensors);
       setIsLoading(false);
+      setAvailableNames(names);
       setAvailableTags(tags);
     };
 
@@ -54,16 +64,29 @@ const Sensors = () => {
     console.log(type, id, action);
 
     // Update the current search parameters
-    const params = JSON.parse(JSON.stringify(searchParameters));
-    if (action === "add") {
-      params.push({
-        type: type,
-        id: id
-      });
-    } else {
-      const index = params.findIndex(param => param.id === id && param.type === type);
-      params.splice(index, 1);
-    }
+    let params = JSON.parse(JSON.stringify(searchParameters));
+    switch (type) {
+      case "name":
+        params = params.filter(param => param.type !== "name");
+        if (id.length > 0) {
+          params.push({
+            type: "name",
+            id: id
+          });
+        }
+        break;
+      case "tag":
+        if (action === "add") {
+          params.push({
+            type: type,
+            id: id
+          });
+        } else {
+          const index = params.findIndex(param => param.id === id && param.type === type);
+          params.splice(index, 1);
+        }
+        break;
+    };
 
     const searchStatus = searchParameters.length > 0 ? true : false;
     setIsSearch(searchStatus);
@@ -81,6 +104,9 @@ const Sensors = () => {
         console.log("search param", param)
         if (sensorMatchFilters) {
           switch (param.type) {
+            case "name":
+              sensorMatchFilters = sensor.name === param.id ? true : false;
+              break;
             case "tag":
               sensorMatchFilters = sensor.tags.includes(param.id) ? true : false;
               break;
@@ -88,7 +114,7 @@ const Sensors = () => {
         }
 
       });
-
+      
       if (sensorMatchFilters) {
         filteredSensors.push(sensor);
       }
@@ -105,6 +131,7 @@ const Sensors = () => {
         <div className="row">
           <div className="col-12 col-md-4">
             <Filters 
+              names={availableNames}
               tags={availableTags}
               filterSensors={filterSensors}
             />
