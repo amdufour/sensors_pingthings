@@ -1,0 +1,10 @@
+.tags {
+  display: flex;
+  .tag {
+    margin: 5px 7px;
+    padding: 7px 20px;
+    color: $white;
+    background-color: $highlight;
+    border-radius: 20px;
+  }
+}

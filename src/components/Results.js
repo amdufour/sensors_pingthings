@@ -1,4 +1,5 @@
 import Card from "../UI/Card";
+import Edit from "../assets/Edit";
 
 const Results = props => {
   return (
@@ -29,7 +30,12 @@ const Results = props => {
             </div>
           </div>
           <div className="edit">
-            <button>Edit</button>
+            <button className="edit">
+              <span className="button-icon">
+                <Edit />
+              </span>
+              <span className="button-text">Edit</span>
+            </button>
           </div>
         </Card>
       ))}

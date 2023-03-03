@@ -1,0 +1,25 @@
+.card {
+  position: relative;
+  margin: 30px 0;
+  padding: 2.5rem;
+  color: $gray;
+  font-weight: 500;
+  background-color: $black;
+  border-radius: $radius;
+  h3 {
+    margin-right: 150px;
+    color: $white;
+  }
+  .card-section {
+    margin: 2rem 0;
+  }
+  .card-section-title {
+    font-weight: 700;
+  }
+  .coordinates {
+    display: flex;
+    .coordinate {
+      margin-right: 20px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+button {
+  padding: 7px 25px;
+  color: $white;
+  font-weight: 700;
+  background-color: $secondary;
+  border: none;
+  border-radius: $radius;
+  cursor: pointer;
+  transition-property: all;
+  @include easeSineIn;
+  &:hover, &:focus {
+    background-color: $white;
+    color: $black;
+    @include easeSineOut;
+  }
+
+  // Edit button
+  &.edit {
+    position: absolute;
+    top: 35px;
+    right: 25px;
+    padding-left: 15px;
+    border: 3px solid $white;
+    .button-icon svg {
+      position: relative;
+      top: 5px;
+      width: 25px;
+      height: auto;
+      margin-right: 10px;
+      @include easeSineIn;
+    }
+    &:hover, &:focus {
+      .button-icon svg {
+        fill: $black;
+        @include easeSineOut;
+      }
+    }
+  }
+}

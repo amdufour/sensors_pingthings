@@ -8,6 +8,7 @@ const Sensors = props => {
   const [sensors, setSensors] = useState([]);
 
   useEffect(() => {
+    // Fetch the sensors data
     const sensorsURL = "https://sensors-pingthings-default-rtdb.europe-west1.firebasedatabase.app/sensors.json";
 
     const fetchSensors = async () => {
@@ -26,8 +27,7 @@ const Sensors = props => {
       }
 
       setSensors(loadedSensors);
-      setIsLoading(false)
-      console.log("sensors", loadedSensors);
+      setIsLoading(false);
     };
 
     fetchSensors();
