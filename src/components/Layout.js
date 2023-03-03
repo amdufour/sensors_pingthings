@@ -7,7 +7,7 @@ const Layout = props => {
     <Fragment>
       <header>
         <div className="container">
-          <h1>Sensors</h1>
+          <h1>Manage your Sensors</h1>
         </div>
       </header>
       <main>
