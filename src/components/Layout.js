@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 import Sensors from "./Sensors";
 
-const Layout = props => {
+const Layout = () => {
   return (
     <Fragment>
       <header>

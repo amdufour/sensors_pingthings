@@ -4,7 +4,10 @@ import Edit from "../assets/Edit";
 const Results = props => {
   return (
     <div className="results">
-      <h2>Sensors</h2>
+      {props.isSearch
+        ? <h2>Search Results</h2>
+        : <h2>All Sensors</h2>
+      }
       {props.sensors.map(sensor => (
         <Card key={sensor.id}>
           <h3>{sensor.name}</h3>

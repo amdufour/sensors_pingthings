@@ -4,9 +4,11 @@ import Loader from "./Loader";
 import Filters from "./Filters";
 import Results from "./Results";
 
-const Sensors = props => {
+const Sensors = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [sensors, setSensors] = useState([]);
+  const [allSensors, setAllSensors] = useState([]);
+  const [sensorsToDisplay, setSensorsToDisplay] = useState([]);
+  const [isSearch, setIsSearch] = useState(false);
   const [availableTags, setAvailableTags] = useState([]);
 
   useEffect(() => {
@@ -38,13 +40,59 @@ const Sensors = props => {
         });
       }
 
-      setSensors(loadedSensors);
+      setAllSensors(loadedSensors);
+      setSensorsToDisplay(loadedSensors);
       setIsLoading(false);
       setAvailableTags(tags);
     };
 
     fetchSensors();
   }, []);
+
+  const searchParameters = [];
+  const filterSensors = (type, id, action) => {
+
+    // Update the current search parameters
+    if (action === "add") {
+      searchParameters.push({
+        type: type,
+        id: id
+      });
+    } else {
+      const index = searchParameters.findIndex(param => param.id === id && param.type === type);
+      searchParameters.splice(index, 1);
+    }
+
+    const searchStatus = searchParameters.length > 0 ? true : false;
+    setIsSearch(searchStatus);
+
+
+    // Update the list of sensors to display
+    const filteredSensors = [];
+    allSensors.forEach(sensor => {
+      console.log("sensor", sensor)
+      let sensorMatchFilters = true;
+
+      searchParameters.every(param => {
+        console.log("search param", param)
+        switch (param.type) {
+          case "tag":
+            sensorMatchFilters = sensor.tags.includes(param.id) ? true : false;
+            break;
+        };
+
+        return sensorMatchFilters ? true : false;
+      });
+
+      if (sensorMatchFilters) {
+        filteredSensors.push(sensor);
+      }
+
+    });
+
+    setSensorsToDisplay(filteredSensors);
+    
+  };
 
   return (
     <Fragment>
@@ -53,11 +101,12 @@ const Sensors = props => {
           <div className="col-12 col-md-4">
             <Filters 
               tags={availableTags}
+              filterSensors={filterSensors}
             />
           </div>
           <div className="col-12 col-md-8">
             {isLoading && <Loader />}
-            {!isLoading && <Results sensors={sensors} />}
+            {!isLoading && <Results sensors={sensorsToDisplay} isSearch={isSearch} />}
           </div>
         </div>
       </section>
