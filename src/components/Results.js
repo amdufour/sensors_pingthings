@@ -5,7 +5,7 @@ const Results = props => {
     <div className="results">
       <h2>Sensors</h2>
       {props.sensors.map(sensor => (
-        <Card>
+        <Card key={sensor.id}>
           <h3>{sensor.name}</h3>
           <div className="card-section">
             <div className="card-section-title">Location</div>
@@ -24,9 +24,12 @@ const Results = props => {
             <div className="card-section-title">Tags</div>
             <div className="tags">
               {sensor.tags.map(tag => (
-                <div className="tag">{tag}</div>
+                <div key={`${sensor.id}-${tag}`} className="tag">{tag}</div>
               ))}
             </div>
+          </div>
+          <div className="edit">
+            <button>Edit</button>
           </div>
         </Card>
       ))}

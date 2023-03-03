@@ -1,8 +1,10 @@
 import { Fragment, useState, useEffect } from "react";
 
+import Loader from "./Loader";
 import Results from "./Results";
 
 const Sensors = props => {
+  const [isLoading, setIsLoading] = useState(true);
   const [sensors, setSensors] = useState([]);
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Sensors = props => {
       }
 
       setSensors(loadedSensors);
+      setIsLoading(false)
       console.log("sensors", loadedSensors);
     };
 
@@ -36,9 +39,8 @@ const Sensors = props => {
         <div className="row">
           <div className="col-12 col-md-4">Filters</div>
           <div className="col-12 col-md-8">
-            <Results 
-              sensors={sensors}
-            />
+            {isLoading && <Loader />}
+            {!isLoading && <Results sensors={sensors} />}
           </div>
         </div>
       </section>
