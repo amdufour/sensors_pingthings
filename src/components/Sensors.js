@@ -1,11 +1,13 @@
 import { Fragment, useState, useEffect } from "react";
 
 import Loader from "./Loader";
+import Filters from "./Filters";
 import Results from "./Results";
 
 const Sensors = props => {
   const [isLoading, setIsLoading] = useState(true);
   const [sensors, setSensors] = useState([]);
+  const [availableTags, setAvailableTags] = useState([]);
 
   useEffect(() => {
     // Fetch the sensors data
@@ -16,6 +18,9 @@ const Sensors = props => {
       const responseData = await response.json();
 
       const loadedSensors = [];
+      const tags = [];
+
+      // Extract sensors metadata
       for (const key in responseData) {
         loadedSensors.push({
           id: key,
@@ -24,10 +29,18 @@ const Sensors = props => {
           longitude: responseData[key].loc_long,
           tags: responseData[key].tags,
         });
+
+        // Extract available tags
+        responseData[key].tags.forEach(tag => {
+          if (!tags.includes(tag)) {
+            tags.push(tag);
+          }
+        });
       }
 
       setSensors(loadedSensors);
       setIsLoading(false);
+      setAvailableTags(tags);
     };
 
     fetchSensors();
@@ -37,7 +50,11 @@ const Sensors = props => {
     <Fragment>
       <section>
         <div className="row">
-          <div className="col-12 col-md-4">Filters</div>
+          <div className="col-12 col-md-4">
+            <Filters 
+              tags={availableTags}
+            />
+          </div>
           <div className="col-12 col-md-8">
             {isLoading && <Loader />}
             {!isLoading && <Results sensors={sensors} />}

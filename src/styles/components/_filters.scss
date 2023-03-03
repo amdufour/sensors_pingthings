@@ -1,0 +1,26 @@
+.filters-container {
+  padding: 2.5rem;
+  border: 3px solid $black;
+  border-radius: $radius;
+
+  .filters-section {
+    margin: 2rem 0;
+    .filters-section-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+    }
+    .filters-section-instructions {
+      color: $gray;
+      font-style: italic;
+    }
+  }
+
+  // Tags
+  .tag {
+    cursor: pointer;
+    &:hover, &:focus {
+      color: $white;
+      background-color: $highlight;
+    }
+  }
+}

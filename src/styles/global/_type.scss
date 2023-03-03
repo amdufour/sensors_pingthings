@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
 $fontPrimary: 'Montserrat', sans-serif;
 $fontSize: 2rem;
@@ -22,7 +22,7 @@ h1 {
 }
 h2 {
   margin: 0;
-  font-size: 4rem;
+  font-size: 4.5rem;
   @media (max-width: $md) {
     font-size: 3.8rem;
   }
