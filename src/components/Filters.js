@@ -30,49 +30,51 @@ const Filters = props => {
 
   return (
     <div className="filters-container">
-      <h2>Filter</h2>
-      <div className="filters-section">
-        <div className="filters-section-title">Name</div>
-        <div className="filters-section-instructions">Start typing the name of the filter.</div>
-        <Select
-          options={props.names}
-          isClearable
-          onChange={(e) => stringSelectionHandler(e, "name")}
-        />
-      </div>
-      <div className="filters-section">
-        <div className="filters-section-title">Location</div>
-        <div className="filters-section-instructions">Start typing the GPS coordinates.</div>
-        <div className="filters-subsection">
-          <div className="filters-section-subtitle">Latitude</div>
+      <div className="filters">
+        <h2>Filter</h2>
+        <div className="filters-section">
+          <div className="filters-section-title">Name</div>
+          <div className="filters-section-instructions">Start typing the name of the filter.</div>
           <Select
-          options={props.latitudes}
-          isClearable
-          onChange={(e) => stringSelectionHandler(e, "latitude")}
-        />
+            options={props.names}
+            isClearable
+            onChange={(e) => stringSelectionHandler(e, "name")}
+          />
         </div>
-        <div className="filters-subsection">
-          <div className="filters-section-subtitle">Longitude</div>
-          <Select
-          options={props.longitudes}
-          isClearable
-          onChange={(e) => stringSelectionHandler(e, "longitude")}
-        />
+        <div className="filters-section">
+          <div className="filters-section-title">Location</div>
+          <div className="filters-section-instructions">Start typing the GPS coordinates.</div>
+          <div className="filters-subsection">
+            <div className="filters-section-subtitle">Latitude</div>
+            <Select
+            options={props.latitudes}
+            isClearable
+            onChange={(e) => stringSelectionHandler(e, "latitude")}
+          />
+          </div>
+          <div className="filters-subsection">
+            <div className="filters-section-subtitle">Longitude</div>
+            <Select
+            options={props.longitudes}
+            isClearable
+            onChange={(e) => stringSelectionHandler(e, "longitude")}
+          />
+          </div>
         </div>
-      </div>
-      <div className="filters-section">
-        <div className="filters-section-title">Tags</div>
-        <div className="filters-section-instructions">Select all that apply.</div>
-        <div className="filter-tags-container tags">
-          {props.tags.map((tag, i) => (
-            <div 
-              key={`filter-tag-${i}`} 
-              className={`tag ${!selectedTags.includes(tag) && "unselected"}`}
-              onClick={() => tagClickHandler(tag)}
-            >
-              {tag}
-            </div>
-          ))}
+        <div className="filters-section">
+          <div className="filters-section-title">Tags</div>
+          <div className="filters-section-instructions">Select all that apply.</div>
+          <div className="filter-tags-container tags">
+            {props.tags.map((tag, i) => (
+              <div 
+                key={`filter-tag-${i}`} 
+                className={`tag ${!selectedTags.includes(tag) && "unselected"}`}
+                onClick={() => tagClickHandler(tag)}
+              >
+                {tag}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

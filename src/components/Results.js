@@ -1,7 +1,12 @@
 import Card from "../UI/Card";
-import Edit from "../assets/Edit";
+import EditIcon from "../assets/Edit-icon";
 
 const Results = props => {
+
+  const clickEditHandler = sensor => {
+    props.editSensor(sensor);
+  };
+
   return (
     <div className="results">
       {props.isSearch
@@ -33,9 +38,12 @@ const Results = props => {
             </div>
           </div>
           <div className="edit">
-            <button className="edit">
+            <button 
+              className="edit"
+              onClick={() => clickEditHandler(sensor)}
+            >
               <span className="button-icon">
-                <Edit />
+                <EditIcon />
               </span>
               <span className="button-text">Edit</span>
             </button>

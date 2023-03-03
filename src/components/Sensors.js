@@ -3,6 +3,8 @@ import { Fragment, useState, useEffect } from "react";
 import Loader from "./Loader";
 import Filters from "./Filters";
 import Results from "./Results";
+import PopUp from "../UI/PopUp";
+import SensorForm from "./Sensor-form";
 
 const Sensors = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +16,7 @@ const Sensors = () => {
   const [availableNames, setAvailableNames] = useState([]);
   const [availableLatitudes, setAvailableLatitudes] = useState([]);
   const [availableLongitudes, setAvailableLongitudes] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     // Fetch the sensors data
@@ -83,7 +86,6 @@ const Sensors = () => {
   }, []);
 
   const filterSensors = (type, id, action) => {
-    console.log(type, id, action);
 
     // Update the current search parameters
     let params = JSON.parse(JSON.stringify(searchParameters));
@@ -123,17 +125,14 @@ const Sensors = () => {
     const searchStatus = searchParameters.length > 0 ? true : false;
     setIsSearch(searchStatus);
     setSearchParameters(params);
-    console.log("searchParameters", searchParameters)
 
 
     // Update the list of sensors to display
     const filteredSensors = [];
     allSensors.forEach(sensor => {
-      console.log("sensor", sensor)
       let sensorMatchFilters = true;
 
       params.forEach(param => {
-        console.log("search param", param)
         if (sensorMatchFilters) {
           switch (param.type) {
             case "name":
@@ -159,6 +158,16 @@ const Sensors = () => {
     
   };
 
+  const editSensor = sensor => {
+    console.log(sensor)
+    setIsEditing(true);
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = isEditing ? "hidden" : "unset";
+    document.body.style.height = isEditing ? "100vh" : "auto";
+  }, [isEditing]);
+
   return (
     <Fragment>
       <section>
@@ -174,13 +183,25 @@ const Sensors = () => {
           </div>
           <div className="col-12 col-md-8">
             {isLoading && <Loader />}
-            {!isLoading && <Results sensors={sensorsToDisplay} isSearch={isSearch} />}
+            {!isLoading && 
+              <Results 
+                sensors={sensorsToDisplay} 
+                isSearch={isSearch} 
+                editSensor={editSensor}
+              />}
           </div>
         </div>
       </section>
       <section>
         <div>Add a sensor</div>
       </section>
+      {isEditing &&
+        <PopUp>
+          <SensorForm
+
+          />
+        </PopUp>
+      }
     </Fragment>
   );
 };

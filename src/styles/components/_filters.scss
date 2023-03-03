@@ -1,7 +1,15 @@
 .filters-container {
-  padding: 2.5rem;
-  border: 3px solid $black;
-  border-radius: $radius;
+  display: flex;
+  height: 100%;
+  .filters {
+    align-self: flex-end;
+    bottom: 2rem;
+    position: -webkit-sticky;
+    position: sticky;
+    padding: 2.5rem;
+    border: 3px solid $black;
+    border-radius: $radius;
+  }
 
   .filters-section {
     margin: 2rem 0;
