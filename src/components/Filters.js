@@ -4,11 +4,11 @@ import Select from 'react-select';
 const Filters = props => {
   const [selectedTags, setSelectedTags] = useState([]);
 
-  const nameSelectionHandler = selection => {
+  const stringSelectionHandler = (selection, type) => {
     const action = selection === null ? "remove" : "add";
     const label = selection === null ? "" : selection.label;
-    props.filterSensors("name", label, action);
-  };
+    props.filterSensors(type, label, action);
+  }
 
   const tagClickHandler = tag => {
     // Update the list of selected tags
@@ -37,8 +37,28 @@ const Filters = props => {
         <Select
           options={props.names}
           isClearable
-          onChange={nameSelectionHandler}
+          onChange={(e) => stringSelectionHandler(e, "name")}
         />
+      </div>
+      <div className="filters-section">
+        <div className="filters-section-title">Location</div>
+        <div className="filters-section-instructions">Start typing the GPS coordinates.</div>
+        <div className="filters-subsection">
+          <div className="filters-section-subtitle">Latitude</div>
+          <Select
+          options={props.latitudes}
+          isClearable
+          onChange={(e) => stringSelectionHandler(e, "latitude")}
+        />
+        </div>
+        <div className="filters-subsection">
+          <div className="filters-section-subtitle">Longitude</div>
+          <Select
+          options={props.longitudes}
+          isClearable
+          onChange={(e) => stringSelectionHandler(e, "longitude")}
+        />
+        </div>
       </div>
       <div className="filters-section">
         <div className="filters-section-title">Tags</div>

@@ -12,6 +12,8 @@ const Sensors = () => {
   const [searchParameters, setSearchParameters] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
   const [availableNames, setAvailableNames] = useState([]);
+  const [availableLatitudes, setAvailableLatitudes] = useState([]);
+  const [availableLongitudes, setAvailableLongitudes] = useState([]);
 
   useEffect(() => {
     // Fetch the sensors data
@@ -23,6 +25,8 @@ const Sensors = () => {
 
       const loadedSensors = [];
       const names = [];
+      const latitudes = [];
+      const longitudes = [];
       const tags = [];
 
       // Extract sensors metadata
@@ -42,6 +46,22 @@ const Sensors = () => {
           label: responseData[key].name
         });
 
+        // Extract available locations
+        let latitudeCounter = 0;
+        let longitudeCounter = 0;
+        if (!latitudes.find(lat => lat.label === responseData[key].loc_lat)) {
+          latitudes.push({
+            value: `latitude_${latitudeCounter}`,
+            label: responseData[key].loc_lat
+          });
+        }
+        if (!longitudes.find(long => long.label === responseData[key].loc_long)) {
+          longitudes.push({
+            value: `latitude_${longitudeCounter}`,
+            label: responseData[key].loc_long
+          });
+        }
+
         // Extract available tags
         responseData[key].tags.forEach(tag => {
           if (!tags.includes(tag)) {
@@ -54,6 +74,8 @@ const Sensors = () => {
       setSensorsToDisplay(loadedSensors);
       setIsLoading(false);
       setAvailableNames(names);
+      setAvailableLatitudes(latitudes);
+      setAvailableLongitudes(longitudes);
       setAvailableTags(tags);
     };
 
@@ -67,10 +89,20 @@ const Sensors = () => {
     let params = JSON.parse(JSON.stringify(searchParameters));
     switch (type) {
       case "name":
-        params = params.filter(param => param.type !== "name");
+        params = params.filter(param => param.type !== type);
         if (id.length > 0) {
           params.push({
-            type: "name",
+            type: type,
+            id: id
+          });
+        }
+        break;
+      case "latitude":
+      case "longitude":
+        params = params.filter(param => param.type !== type);
+        if (id) {
+          params.push({
+            type: type,
             id: id
           });
         }
@@ -105,7 +137,9 @@ const Sensors = () => {
         if (sensorMatchFilters) {
           switch (param.type) {
             case "name":
-              sensorMatchFilters = sensor.name === param.id ? true : false;
+            case "latitude":
+            case "longitude":
+              sensorMatchFilters = sensor[param.type] === param.id ? true : false;
               break;
             case "tag":
               sensorMatchFilters = sensor.tags.includes(param.id) ? true : false;
@@ -132,6 +166,8 @@ const Sensors = () => {
           <div className="col-12 col-md-4">
             <Filters 
               names={availableNames}
+              latitudes={availableLatitudes}
+              longitudes={availableLongitudes}
               tags={availableTags}
               filterSensors={filterSensors}
             />
