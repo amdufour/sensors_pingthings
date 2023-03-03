@@ -42,6 +42,9 @@ const Results = props => {
           </div>
         </Card>
       ))}
+      {props.sensors.length === 0 &&
+        <div className="no-result">Bummer! No results found.</div>
+      }
     </div>
   );
 };

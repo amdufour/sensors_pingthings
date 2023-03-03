@@ -9,6 +9,7 @@ const Sensors = () => {
   const [allSensors, setAllSensors] = useState([]);
   const [sensorsToDisplay, setSensorsToDisplay] = useState([]);
   const [isSearch, setIsSearch] = useState(false);
+  const [searchParameters, setSearchParameters] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
 
   useEffect(() => {
@@ -49,22 +50,25 @@ const Sensors = () => {
     fetchSensors();
   }, []);
 
-  const searchParameters = [];
   const filterSensors = (type, id, action) => {
+    console.log(type, id, action);
 
     // Update the current search parameters
+    const params = JSON.parse(JSON.stringify(searchParameters));
     if (action === "add") {
-      searchParameters.push({
+      params.push({
         type: type,
         id: id
       });
     } else {
-      const index = searchParameters.findIndex(param => param.id === id && param.type === type);
-      searchParameters.splice(index, 1);
+      const index = params.findIndex(param => param.id === id && param.type === type);
+      params.splice(index, 1);
     }
 
     const searchStatus = searchParameters.length > 0 ? true : false;
     setIsSearch(searchStatus);
+    setSearchParameters(params);
+    console.log("searchParameters", searchParameters)
 
 
     // Update the list of sensors to display
@@ -73,15 +77,16 @@ const Sensors = () => {
       console.log("sensor", sensor)
       let sensorMatchFilters = true;
 
-      searchParameters.every(param => {
+      params.forEach(param => {
         console.log("search param", param)
-        switch (param.type) {
-          case "tag":
-            sensorMatchFilters = sensor.tags.includes(param.id) ? true : false;
-            break;
-        };
+        if (sensorMatchFilters) {
+          switch (param.type) {
+            case "tag":
+              sensorMatchFilters = sensor.tags.includes(param.id) ? true : false;
+              break;
+          };
+        }
 
-        return sensorMatchFilters ? true : false;
       });
 
       if (sensorMatchFilters) {
