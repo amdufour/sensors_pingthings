@@ -1,13 +1,11 @@
 import "./styles/styles.scss";
 
+import Layout from "./components/Layout";
+
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="container">
-          <h1>Your sensors</h1>
-        </div>
-      </header>
+      <Layout />
     </div>
   );
 }
