@@ -6,8 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 To run the project locally:
 
-`npm install`
-`npm start`
+```
+npm install
+npm start
+```
 
 ---
 
@@ -33,4 +35,17 @@ s1: {
 
 ---
 
-##
+## Next steps...
+
+1. Complete unit and integration tests (I only had time for a few simple tests).
+2. When adding a new sensor, allow user to create new tags.
+3. When editing an existing sensor, allow user to edit the tags.
+4. Make changes persistent when adding or editing a sensor.
+5. Allow user to delete a sensor.
+6. Allow searching for multiple names at a time.
+7. Update available filters when user makes a selection. For example, based on the current selection some tags or names might not be available anymore.
+8. Refine the mobile layout by collapsing the filters and making them fixed on the screen as we scroll the list of sensors.
+9. Complete cross-browser tests (currently tested on Chrome and Firefox).
+10. Make the Sensors component smaller: Use another component to fetch and filter the data.
+11. Create unique ids for newly added sensors.
+12. Update filter options when creating a new sensor.
