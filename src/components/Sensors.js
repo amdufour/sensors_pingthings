@@ -189,6 +189,14 @@ const Sensors = () => {
     setSensorsToDisplay(sensors);
   };
 
+  const editSensor = sensor => {
+    const sensors = JSON.parse(JSON.stringify(sensorsToDisplay));
+    const editedSensor = sensors.find(s => s.id === sensor.id);
+    editedSensor.latitude = sensor.latitude;
+    editedSensor.longitude = sensor.longitude;
+    setSensorsToDisplay(sensors);
+  };
+
   useEffect(() => {
     document.body.style.overflow = popupIsVisible ? "hidden" : "unset";
     document.body.style.height = popupIsVisible ? "100vh" : "auto";
@@ -228,6 +236,7 @@ const Sensors = () => {
             sensor={sensorToEdit}
             closeForm={closeForm}
             addSensor={addSensor}
+            editSensor={editSensor}
           />
         </PopUp>
       }

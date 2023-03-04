@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import Select from 'react-select';
 
 import useInput from "../hooks/use-input";
@@ -18,16 +18,20 @@ const SensorForm = props => {
     value: enteredLatitude, 
     isValid: enteredLatitudeIsValid,
     hasError: latitudeInputHasError, 
-    valueChangeHandler : latitudeChangeHandler, 
+    hadFocus: latitudeHadFocus,
+    valueChangeHandler: latitudeChangeHandler, 
     valueBlurHandler: latitudeBlurHandler,
+    valueFocusHandler: latitudeFocusHandler,
   } = useInput(value => value.trim() !== "");
 
   const { 
     value: enteredLongitude, 
     isValid: enteredLongitudeIsValid,
     hasError: longitudeInputHasError, 
+    hadFocus: longitudeHadFocus,
     valueChangeHandler : longitudeChangeHandler, 
     valueBlurHandler: longitudeBlurHandler,
+    valueFocusHandler: longitudeFocusHandler
   } = useInput(value => value.trim() !== "");
 
   const tagsOptions = [];
@@ -41,35 +45,6 @@ const SensorForm = props => {
   const tagSelectionHandler = selection => {
     setSelectedTags(selection);
   };
-
-  useEffect(() => {
-    
-    // If is editing mode, set the fields value with the sensor metadata
-    if (props.isEditing) {
-      const latInput = document.getElementById("sensor-latitude");
-      latInput.value = props.sensor.latitude;
-      
-      const latEvent = new Event("input", { bubbles: true });
-      const latTracker = latInput._valueTracker;
-
-      if (latTracker) {
-        latTracker.setValue(props.sensor.latitude);
-      }
-      latInput.dispatchEvent(latEvent);
-
-      const longInput = document.getElementById("sensor-longitude");
-      longInput.value = props.sensor.longitude;
-      
-      const longEvent = new Event("input", { bubbles: true });
-      const longTracker = longInput._valueTracker;
-
-      if (longTracker) {
-        longTracker.setValue(props.sensor.longitude);
-      }
-      longInput.dispatchEvent(longEvent);
-    }
-
-  }, []);
 
   // Manage overall form validity
   let formIsValid = false;
@@ -85,22 +60,35 @@ const SensorForm = props => {
     if (!formIsValid) {
       return;
     }
-
-    closePopupHandler();
     
     const sensorMetadata = {
-      id: `s${Math.floor(Math.random() * 100)}`,
-      name: enteredName,
       latitude: +enteredLatitude,
       longitude: +enteredLongitude,
-      tags: selectedTags.map(tag => tag.label)
     };
-    props.addSensor(sensorMetadata);
+
+    if (props.isEditing) {
+      sensorMetadata["id"] = props.sensor.id;
+      props.editSensor(sensorMetadata);
+    } else {
+      sensorMetadata["id"] = `s${Math.floor(Math.random() * 100)}`;
+      sensorMetadata["name"] = enteredName;
+      sensorMetadata["tags"] = selectedTags.map(tag => tag.label);
+      props.addSensor(sensorMetadata);
+    }
+
+    closePopupHandler();
   };
 
   const closePopupHandler = () => {
     props.closeForm();
   };
+
+  const latitudeValue = props.isEditing && !latitudeHadFocus
+    ? props.sensor.latitude
+    : enteredLatitude || "";
+  const longitudeValue = props.isEditing && !longitudeHadFocus
+    ? props.sensor.longitude
+    : enteredLongitude || "";
 
   return (
     <Fragment>
@@ -129,8 +117,9 @@ const SensorForm = props => {
             id="sensor-latitude"
             name="sensor-latitude"
             onChange={latitudeChangeHandler} 
+            onFocus={latitudeFocusHandler}
             onBlur={latitudeBlurHandler}
-            value={enteredLatitude || ""}
+            value={latitudeValue}
           />
           {latitudeInputHasError &&
             <p className="error-text">Latitude must not be empty</p>
@@ -143,8 +132,9 @@ const SensorForm = props => {
             id="sensor-longitude"
             name="sensor-longitude"
             onChange={longitudeChangeHandler} 
+            onFocus={longitudeFocusHandler}
             onBlur={longitudeBlurHandler}
-            value={enteredLongitude || ""}
+            value={longitudeValue}
           />
           {longitudeInputHasError &&
             <p className="error-text">Longitude must not be empty</p>
