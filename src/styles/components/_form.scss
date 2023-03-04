@@ -1,0 +1,33 @@
+form {
+  .form-section {
+    margin: 2rem 0;
+  }
+
+  label {
+    display: block;
+    font-weight: 500;
+  }
+  input,
+  [class*="control"] {
+    width: 100%;
+    border: 3px solid $grayDark;
+    border-radius: $radius;
+  }
+  input {
+    padding: 5px 10px 3px;
+  }
+
+  .form-actions {
+    margin-top: 4rem;
+    button {
+      margin: 4px 7px;
+    }
+  }
+
+  .error-text {
+    margin: 0.5rem 0;
+    color: $error;
+    font-style: italic;
+    font-size: 1.6rem;
+  }
+}

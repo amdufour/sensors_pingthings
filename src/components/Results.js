@@ -1,18 +1,26 @@
 import Card from "../UI/Card";
 import EditIcon from "../assets/Edit-icon";
+import AddSensor from "./Add-sensor";
 
 const Results = props => {
 
   const clickEditHandler = sensor => {
-    props.editSensor(sensor);
+    props.openFormToEdit(sensor);
+  };
+
+  const clickAddHandler = () => {
+    props.openFormToAdd();
   };
 
   return (
     <div className="results">
-      {props.isSearch
-        ? <h2>Search Results</h2>
-        : <h2>All Sensors</h2>
-      }
+      <div className="results-header">
+        {props.isSearch
+          ? <h2>Search Results</h2>
+          : <h2>All Sensors</h2>
+        }
+        <AddSensor clickAddHandler={clickAddHandler} />
+      </div>
       {props.sensors.map(sensor => (
         <Card key={sensor.id}>
           <h3>{sensor.name}</h3>

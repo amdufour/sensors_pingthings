@@ -47,18 +47,18 @@ const Filters = props => {
           <div className="filters-subsection">
             <div className="filters-section-subtitle">Latitude</div>
             <Select
-            options={props.latitudes}
-            isClearable
-            onChange={(e) => stringSelectionHandler(e, "latitude")}
-          />
+              options={props.latitudes}
+              isClearable
+              onChange={(e) => stringSelectionHandler(e, "latitude")}
+            />
           </div>
           <div className="filters-subsection">
             <div className="filters-section-subtitle">Longitude</div>
             <Select
-            options={props.longitudes}
-            isClearable
-            onChange={(e) => stringSelectionHandler(e, "longitude")}
-          />
+              options={props.longitudes}
+              isClearable
+              onChange={(e) => stringSelectionHandler(e, "longitude")}
+            />
           </div>
         </div>
         <div className="filters-section">

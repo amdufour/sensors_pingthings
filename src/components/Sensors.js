@@ -7,6 +7,7 @@ import PopUp from "../UI/PopUp";
 import SensorForm from "./Sensor-form";
 
 const Sensors = () => {
+  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [allSensors, setAllSensors] = useState([]);
   const [sensorsToDisplay, setSensorsToDisplay] = useState([]);
@@ -16,70 +17,78 @@ const Sensors = () => {
   const [availableNames, setAvailableNames] = useState([]);
   const [availableLatitudes, setAvailableLatitudes] = useState([]);
   const [availableLongitudes, setAvailableLongitudes] = useState([]);
+  const [popupIsVisible, setPopupIsVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [sensorToEdit, setSensorToEdit] = useState({});
 
   useEffect(() => {
     // Fetch the sensors data
     const sensorsURL = "https://sensors-pingthings-default-rtdb.europe-west1.firebasedatabase.app/sensors.json";
 
     const fetchSensors = async () => {
-      const response = await fetch(sensorsURL);
-      const responseData = await response.json();
-
-      const loadedSensors = [];
-      const names = [];
-      const latitudes = [];
-      const longitudes = [];
-      const tags = [];
-
-      // Extract sensors metadata
-      for (const key in responseData) {
-        loadedSensors.push({
-          id: key,
-          name: responseData[key].name,
-          latitude: responseData[key].loc_lat,
-          longitude: responseData[key].loc_long,
-          tags: responseData[key].tags,
-        });
-
-        // Extract available names
-        // We consider that names are unique for simplicity
-        names.push({
-          value: responseData[key].name.toLowerCase(),
-          label: responseData[key].name
-        });
-
-        // Extract available locations
-        let latitudeCounter = 0;
-        let longitudeCounter = 0;
-        if (!latitudes.find(lat => lat.label === responseData[key].loc_lat)) {
-          latitudes.push({
-            value: `latitude_${latitudeCounter}`,
-            label: responseData[key].loc_lat
+      try {
+        const response = await fetch(sensorsURL);
+        const responseData = await response.json();
+  
+        const loadedSensors = [];
+        const names = [];
+        const latitudes = [];
+        const longitudes = [];
+        const tags = [];
+  
+        // Extract sensors metadata
+        for (const key in responseData) {
+          loadedSensors.push({
+            id: key,
+            name: responseData[key].name,
+            latitude: responseData[key].loc_lat,
+            longitude: responseData[key].loc_long,
+            tags: responseData[key].tags,
           });
-        }
-        if (!longitudes.find(long => long.label === responseData[key].loc_long)) {
-          longitudes.push({
-            value: `latitude_${longitudeCounter}`,
-            label: responseData[key].loc_long
+  
+          // Extract available names
+          // We consider that names are unique for simplicity
+          names.push({
+            value: responseData[key].name.toLowerCase(),
+            label: responseData[key].name
           });
-        }
-
-        // Extract available tags
-        responseData[key].tags.forEach(tag => {
-          if (!tags.includes(tag)) {
-            tags.push(tag);
+  
+          // Extract available locations
+          let latitudeCounter = 0;
+          let longitudeCounter = 0;
+          if (!latitudes.find(lat => lat.label === responseData[key].loc_lat)) {
+            latitudes.push({
+              value: `latitude_${latitudeCounter}`,
+              label: responseData[key].loc_lat
+            });
           }
-        });
-      }
+          if (!longitudes.find(long => long.label === responseData[key].loc_long)) {
+            longitudes.push({
+              value: `latitude_${longitudeCounter}`,
+              label: responseData[key].loc_long
+            });
+          }
+  
+          // Extract available tags
+          responseData[key].tags.forEach(tag => {
+            if (!tags.includes(tag)) {
+              tags.push(tag);
+            }
+          });
+        }
+  
+        setAllSensors(loadedSensors);
+        setSensorsToDisplay(loadedSensors);
+        setIsLoading(false);
+        setAvailableNames(names);
+        setAvailableLatitudes(latitudes);
+        setAvailableLongitudes(longitudes);
+        setAvailableTags(tags);
 
-      setAllSensors(loadedSensors);
-      setSensorsToDisplay(loadedSensors);
-      setIsLoading(false);
-      setAvailableNames(names);
-      setAvailableLatitudes(latitudes);
-      setAvailableLongitudes(longitudes);
-      setAvailableTags(tags);
+      } catch (error) {
+        console.log("error")
+        setIsError(true);
+      }
     };
 
     fetchSensors();
@@ -158,15 +167,32 @@ const Sensors = () => {
     
   };
 
-  const editSensor = sensor => {
-    console.log(sensor)
+  const openFormToAdd = () => {
+    setPopupIsVisible(true);
+    setIsEditing(false);
+  };
+
+  const openFormToEdit = sensor => {
+    setPopupIsVisible(true);
     setIsEditing(true);
+    setSensorToEdit(sensor);
+  };
+
+  const closeForm = () => {
+    setPopupIsVisible(false);
+    setIsEditing(false);
+  }
+
+  const addSensor = sensor => {
+    const sensors = JSON.parse(JSON.stringify(sensorsToDisplay));
+    sensors.unshift(sensor);
+    setSensorsToDisplay(sensors);
   };
 
   useEffect(() => {
-    document.body.style.overflow = isEditing ? "hidden" : "unset";
-    document.body.style.height = isEditing ? "100vh" : "auto";
-  }, [isEditing]);
+    document.body.style.overflow = popupIsVisible ? "hidden" : "unset";
+    document.body.style.height = popupIsVisible ? "100vh" : "auto";
+  }, [popupIsVisible]);
 
   return (
     <Fragment>
@@ -183,22 +209,25 @@ const Sensors = () => {
           </div>
           <div className="col-12 col-md-8">
             {isLoading && <Loader />}
-            {!isLoading && 
+            {!isLoading && !isError && 
               <Results 
                 sensors={sensorsToDisplay} 
                 isSearch={isSearch} 
-                editSensor={editSensor}
+                openFormToAdd={openFormToAdd}
+                openFormToEdit={openFormToEdit}
               />}
+            {!isLoading && isError &&  <div className="no-result">Oops! Something went wrong. Please try again later.</div>}
           </div>
         </div>
       </section>
-      <section>
-        <div>Add a sensor</div>
-      </section>
-      {isEditing &&
+      {popupIsVisible &&
         <PopUp>
           <SensorForm
-
+            tags={availableTags}
+            isEditing={isEditing}
+            sensor={sensorToEdit}
+            closeForm={closeForm}
+            addSensor={addSensor}
           />
         </PopUp>
       }

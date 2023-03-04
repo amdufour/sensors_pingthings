@@ -3,15 +3,42 @@ button {
   color: $white;
   font-weight: 700;
   background-color: $secondary;
-  border: none;
+  border: 3px solid $secondary;
   border-radius: $radius;
   cursor: pointer;
   transition-property: all;
   @include easeSineIn;
   &:hover, &:focus {
-    background-color: $white;
-    color: $black;
+    background-color: $tertiary;
+    border-color: $tertiary;
     @include easeSineOut;
+  }
+
+  &.btn-secondary {
+    color: $secondary;
+    background-color: $white;
+    &:hover, &:focus {
+      border-color: $tertiary;
+      color: $tertiary;
+    }
+  }
+
+  &:disabled {
+    background-color: $gray;
+    border-color: $gray;
+    cursor: not-allowed;
+    &:hover, &:focus {
+      color: $white;
+    }
+  }
+
+  // Button icons
+  .button-icon svg {
+    position: relative;
+    top: 5px;
+    width: 25px;
+    height: auto;
+    margin-right: 10px;
   }
 
   // Edit button
@@ -20,20 +47,13 @@ button {
     top: 35px;
     right: 25px;
     padding-left: 15px;
-    border: 3px solid $white;
-    .button-icon svg {
-      position: relative;
-      top: 5px;
-      width: 25px;
-      height: auto;
-      margin-right: 10px;
-      @include easeSineIn;
-    }
-    &:hover, &:focus {
-      .button-icon svg {
-        fill: $black;
-        @include easeSineOut;
-      }
-    }
+    border-color: $white;
+    
+  }
+
+  // Add button
+  &.add {
+    padding-left: 15px;
   }
 }
+

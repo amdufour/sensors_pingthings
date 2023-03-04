@@ -1,5 +1,6 @@
 .popup-container {
   position: fixed;
+  z-index: 10;
   top: 0;
   left: 0;
   width: 100vw;
@@ -9,6 +10,8 @@
   align-items: center;
   background-color: rgba($text, 0.8);
   .popup {
+    width: calc(100vw - 40px);
+    max-width: 500px;
     padding: 4rem;
     background-color: $white;
     border-radius: $radius;
