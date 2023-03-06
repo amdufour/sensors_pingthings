@@ -113,7 +113,7 @@ const SensorForm = props => {
         <div className="form-section">
           <label htmlFor="sensor-latitude">Latitude</label>
           <input 
-            type="text"
+            type="number"
             id="sensor-latitude"
             name="sensor-latitude"
             onChange={latitudeChangeHandler} 
@@ -128,7 +128,7 @@ const SensorForm = props => {
         <div className="form-section">
           <label htmlFor="sensor-longitude">Longitude</label>
           <input 
-            type="text"
+            type="number"
             id="sensor-longitude"
             name="sensor-longitude"
             onChange={longitudeChangeHandler} 
